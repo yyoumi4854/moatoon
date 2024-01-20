@@ -1,0 +1,5 @@
+/* 액션 타입 정의 */
+// 웹툰 정보 불러오기
+export const GET_WEBTOONS_REQUEST = "GET_WEBTOONS_REQUEST";
+export const GET_WEBTOONS_SUCCESS = "GET_WEBTOONS_SUCCESS";
+export const GET_WEBTOONS_FAILURE = "GET_WEBTOONS_FAILURE";
