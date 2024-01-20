@@ -8,7 +8,7 @@ const initialState = {
 };
 
 // 리듀서 정의
-const webtoonsReducer = (state = initialState, action) => {
+const webtoonsReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case actionTypes.GET_WEBTOONS_REQUEST:
       return { ...state, loading: true, error: null };

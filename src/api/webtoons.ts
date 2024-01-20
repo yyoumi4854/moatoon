@@ -19,8 +19,8 @@ Parameters:
 export const getWebtoons = async ({
   page = 1,
   perPage = 10,
-  service,
-  updateDay,
+  service = "naver",
+  updateDay = "mon",
 }) => {
   const result = instance.get("/", {
     params: {
