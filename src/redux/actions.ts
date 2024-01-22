@@ -2,7 +2,12 @@ import * as actionTypes from "@/redux/actionTypes";
 import * as types from "@/types";
 
 // 액션 생성 함수
-export const getWebtoonsRequest = (page: number, perPage: number, service: string, updateDay: string) => ({
+export const getWebtoonsRequest = ({
+  page,
+  perPage,
+  service,
+  updateDay,
+}: types.WebtoonQueryParams) => ({
   type: actionTypes.GET_WEBTOONS_REQUEST,
   payload: { page, perPage, service, updateDay },
 });

@@ -1,5 +1,5 @@
-type Service = "naver" | "kakao" | "kakaoPage";
-type UpdateDays =
+export type Service = "naver" | "kakao" | "kakaoPage";
+export type UpdateDays =
   | "mon"
   | "tue"
   | "wed"
@@ -9,9 +9,9 @@ type UpdateDays =
   | "sun"
   | "finished"
   | "naverDaily";
-type Singularity = "over15" | "free" | "waitFree";
+export type Singularity = "over15" | "free" | "waitFree";
 
-export interface WEBTOON_QUERY_PARAMS {
+export interface WebtoonQueryParams {
   page?: number;
   perPage?: number;
   service?: Service;
@@ -55,8 +55,3 @@ export interface WebtoonState {
   data?: Webtoons[];
   error?: string;
 }
-
-// export type WebtoonsActionTypes =
-//   | { type: typeof GET_WEBTOONS_REQUEST }
-//   | { type: typeof GET_WEBTOONS_SUCCESS; payload: Webtoons }
-//   | { type: typeof GET_WEBTOONS_FAILURE; payload: string };

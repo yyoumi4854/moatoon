@@ -1,9 +1,49 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getWebtoonsRequest } from "@/redux/actions";
+import * as types from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const { loading, data, error } = useSelector((state: any) => state);
+  const [requestParams, setRequestParams] =
+    useState<types.WebtoonQueryParams | null>({
+      page: 1,
+      perPage: 10,
+      service: "kakao",
+      updateDay: "mon",
+    }); // 나중에 null인 상태로 수정하기
+
+  useEffect(() => {
+    dispatch(getWebtoonsRequest(requestParams as types.WebtoonQueryParams));
+  }, [dispatch, requestParams]);
+
+  const handleServiceButtonClick = (service: types.Service) => {
+    setRequestParams((prevParams) => ({
+      ...prevParams,
+      service,
+    }));
+  };
+
+  const handleDayButtonClick = (updateDay: types.UpdateDays) => {
+    setRequestParams((prevParams) => ({
+      ...prevParams,
+      updateDay,
+    }));
+  };
+
+  if (loading === undefined) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <>
       <header>
@@ -49,6 +89,43 @@ export default function Home() {
         </div>
       </div>
       <footer>푸터</footer>
+
+      <div>
+        <h1>Webtoons</h1>
+        <div>
+          <h2>Service: {requestParams && requestParams.service}</h2>
+          <button onClick={() => handleServiceButtonClick("naver")}>
+            Naver
+          </button>
+          <button onClick={() => handleServiceButtonClick("kakao")}>
+            Kakao
+          </button>
+          <button onClick={() => handleServiceButtonClick("kakaoPage")}>
+            KakaoPage
+          </button>
+        </div>
+        <div>
+          <h2>Update Day: {requestParams && requestParams.updateDay}</h2>
+          <button onClick={() => handleDayButtonClick("mon")}>Monday</button>
+          <button onClick={() => handleDayButtonClick("tue")}>Tuesday</button>
+          <button onClick={() => handleDayButtonClick("wed")}>Wednesday</button>
+          <button onClick={() => handleDayButtonClick("thu")}>Thursday</button>
+          <button onClick={() => handleDayButtonClick("fri")}>Friday</button>
+          <button onClick={() => handleDayButtonClick("sat")}>Saturday</button>
+          <button onClick={() => handleDayButtonClick("sun")}>Sunday</button>
+        </div>
+        <ul>
+          {data &&
+            data.webtoons.map((webtoon: types.Webtoon) => (
+              <li key={webtoon._id}>
+                <a href={webtoon.url}>
+                  <img src={webtoon.img} alt={webtoon.title} />
+                </a>
+                {webtoon.title} - {webtoon.author}
+              </li>
+            ))}
+        </ul>
+      </div>
     </>
   );
 }
