@@ -34,7 +34,7 @@ export interface Webtoon {
     rest: boolean;
     up: boolean;
     adult: boolean;
-    singularityList: Singularity[] | [];
+    singularityList: Singularity[];
   };
 }
 
