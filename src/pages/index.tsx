@@ -30,33 +30,43 @@ const updateDays = [
   { text: "완결", updateDay: "finished", id: "finished" },
 ];
 
+/*
+현재 페이지 -> 데이터에 출력되는 페이지
+page=1 -> page=1
+page=2 -> page=1, page=2
+page=3 -> page=2
+page=4 -> page=3
+(왜이러는지 모르겠다...)
+
+page는 인지가 아주 잘된다. -> payload에 잘 찍힘
+
+0 10 30
+ */
+
 export default function Home() {
   const dispatch = useDispatch();
 
   const { loading, data, error } = useSelector((state: any) => state);
-  const [requestParams, setRequestParams] = useState<types.WebtoonQueryParams>({
-    // page: 1,
-    // perPage: 10,
-    // service: "",
-    // updateDay: "",
-  });
+  const [requestParams, setRequestParams] = useState<types.WebtoonQueryParams>(
+    {}
+  );
 
   const [page, setPage] = useState(1);
   const [dataWebtoons, setDataWebtoons] = useState<types.Webtoon[]>([]); // 무한스크롤 하기 위한 웹툰리스트
   const { ref, inView } = useInView();
+
+  // 데이터 요청
+  useEffect(() => {
+    dispatch(getWebtoonsRequest(requestParams as types.WebtoonQueryParams));
+  }, [dispatch, requestParams]);
 
   // 데이터를 가져온 후에 dataWebtoons 상태에 저장합니다.
   useEffect(() => {
     if (!loading && data) {
       setDataWebtoons((prev) => [...prev, ...data.webtoons]);
     }
-    // console.log(dataWebtoons);
+    console.log("😈😈😈😈😈😈😈", dataWebtoons);
   }, [data, loading]);
-
-  // 데이터 요청
-  useEffect(() => {
-    dispatch(getWebtoonsRequest(requestParams as types.WebtoonQueryParams));
-  }, [dispatch, requestParams]);
 
   // 스크롤이 끝까지 내려가면 page+1 해주기
   useEffect(() => {
@@ -67,29 +77,29 @@ export default function Home() {
   }, [inView]);
 
   useEffect(() => {
+    console.log("😍😍😍😍😍😍😍😍", page);
     handleAddPage(page);
-    // console.log(data);
   }, [page]);
 
   // service 클릭
   const handleServiceButtonClick = (service: types.Service) => {
-    // dataWebttons 리셋
+    // dataWebttons, page 리셋
     setDataWebtoons([]);
+    setPage(1);
 
     setRequestParams(() => ({
-      page: 1,
       service,
     }));
   };
 
   // updateDays 클릭
   const handleDayButtonClick = (updateDay: types.UpdateDays) => {
-    // dataWebttons 리셋
+    // dataWebttons, page 리셋
     setDataWebtoons([]);
+    setPage(1);
 
     setRequestParams((prevParams) => ({
       ...prevParams,
-      page: 1,
       updateDay,
     }));
   };
@@ -177,8 +187,8 @@ export default function Home() {
       <div className="pt-8">
         <ul className="grid grid-cols-5 gap-4 max-w-screen-lg mx-auto">
           {data &&
-            dataWebtoons.map((webtoon: types.Webtoon) => (
-              <li key={webtoon._id}>
+            dataWebtoons.map((webtoon: types.Webtoon, idx) => (
+              <li key={idx}>
                 <Link href={webtoon.url} className="cursor-pointer">
                   <div className="relative rounded border border-slate-200 truncate">
                     <img
@@ -229,7 +239,6 @@ export default function Home() {
                 </div>
               </li>
             ))}
-
           <div ref={ref}>로딩할꺼임</div>
         </ul>
       </div>
