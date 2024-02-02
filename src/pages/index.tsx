@@ -45,39 +45,56 @@ page는 인지가 아주 잘된다. -> payload에 잘 찍힘
 
 export default function Home() {
   const dispatch = useDispatch();
-
   const { loading, data, error } = useSelector((state: any) => state);
-  const [requestParams, setRequestParams] = useState<types.WebtoonQueryParams>(
-    {}
-  );
 
+  // 데이터 요청을 위한 파라미터
+  const [requestParams, setRequestParams] = useState<types.WebtoonQueryParams>({});
+  // 페이지 번호
   const [page, setPage] = useState(1);
+
+
   const [dataWebtoons, setDataWebtoons] = useState<types.Webtoon[]>([]); // 무한스크롤 하기 위한 웹툰리스트
   const { ref, inView } = useInView();
 
   // 데이터 요청
   useEffect(() => {
+    if (requestParams.page === undefined) {
+      return;
+    }
+
+    console.log("데이터 요청함 => ", dispatch);
+    console.log("데이터 요청함 => ", requestParams);
     dispatch(getWebtoonsRequest(requestParams as types.WebtoonQueryParams));
   }, [dispatch, requestParams]);
 
   // 데이터를 가져온 후에 dataWebtoons 상태에 저장합니다.
   useEffect(() => {
+    if (loading) {
+      console.log("데이터 가져오는 중...");
+      return;
+    }
+
+    if (data && data.webtoons.length === 0) {
+      console.log("데이터가 없음");
+      return;
+    }
+
     if (!loading && data) {
+      console.log("데이터 가져옴 => ", data);
       setDataWebtoons((prev) => [...prev, ...data.webtoons]);
     }
-    console.log("😈😈😈😈😈😈😈", dataWebtoons);
   }, [data, loading]);
 
   // 스크롤이 끝까지 내려가면 page+1 해주기
   useEffect(() => {
     if (inView) {
-      console.log("💚💚💚💚 끝!!");
+      console.log("스크롤 끝까지 내려감!!");
       setPage((prev) => prev + 1);
     }
   }, [inView]);
 
   useEffect(() => {
-    console.log("😍😍😍😍😍😍😍😍", page);
+    console.log("페이지 변경됨 => ", page);
     handleAddPage(page);
   }, [page]);
 
@@ -105,6 +122,7 @@ export default function Home() {
   };
 
   const handleAddPage = (page: number) => {
+    console.log("🚀🚀🚀🚀🚀🚀🚀", page);
     setRequestParams((prevParams) => ({
       ...prevParams,
       page,
