@@ -62,7 +62,6 @@ export default function Home() {
       return;
     }
 
-    console.log("데이터 요청함 => ", dispatch);
     console.log("데이터 요청함 => ", requestParams);
     dispatch(getWebtoonsRequest(requestParams as types.WebtoonQueryParams));
   }, [dispatch, requestParams]);
@@ -122,7 +121,6 @@ export default function Home() {
   };
 
   const handleAddPage = (page: number) => {
-    console.log("🚀🚀🚀🚀🚀🚀🚀", page);
     setRequestParams((prevParams) => ({
       ...prevParams,
       page,
